@@ -1,0 +1,113 @@
+using System;
+using System.Collections.Generic; 
+using System.Globalization;     
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+
+class Animal:
+    def __init__(self, animal_id, name, species, age, habitat, diet):
+        self.animal_id = animal_id
+        self.name = name
+        self.species = species
+        self.age = age
+        self.habitat = habitat
+        self.diet = diet
+
+    def display_info(self):
+        print(f"\n--- {self.name} (ID: {self.animal_id}) ---")
+        print(f"Вид: {self.species}")
+        print(f"Возраст: {self.age} лет")
+        print(f"Среда обитания: {self.habitat}")
+        print(f"Рацион: {self.diet}")
+
+    def make_sound(self):
+        print(f"{self.name} издает звук.")
+
+    def eat(self):
+        print(f"{self.name} ест ({self.diet}).")
+
+    def move(self):
+        print(f"{self.name} движется.")
+
+class Mammal(Animal):
+    def __init__(self, animal_id, name, species, age, habitat, diet, fur_type, gestation_period_days):
+        super().__init__(animal_id, name, species, age, habitat, diet) # Вызов конструктора базового класса
+        self.fur_type = fur_type
+        self.gestation_period_days = gestation_period_days
+
+    def display_info(self):
+        super().display_info()
+        print(f"Тип меха: {self.fur_type}")
+        print(f"Продолжительность беременности: {self.gestation_period_days} дней")
+
+    def make_sound(self):
+        print(f"{self.name} рычит.") # Переопределенный метод
+    
+    def give_birth(self):
+        print(f"{self.name} родило детеныша.")
+
+    def nurse_young(self):
+        print(f"{self.name} кормит детенышей молоком.")
+
+class Bird(Animal):
+    def __init__(self, animal_id, name, species, age, habitat, diet, feather_type, wingspan):
+        super().__init__(animal_id, name, species, age, habitat, diet)
+        self.feather_type = feather_type
+        self.wingspan = wingspan
+
+    def display_info(self):
+        super().display_info()
+        print(f"Тип оперения: {self.feather_type}")
+        print(f"Размах крыльев: {self.wingspan} см")
+
+    def make_sound(self):
+        print(f"{self.name} чирикает.") # Переопределенный метод
+
+    def fly(self):
+        print(f"{self.name} летит.")
+
+    def lay_eggs(self):
+        print(f"{self.name} отложила яйца.")
+
+class Reptile(Animal):
+    def __init__(self, animal_id, name, species, age, habitat, diet, scale_type, preferred_temp):
+        super().__init__(animal_id, name, species, age, habitat, diet)
+        self.scale_type = scale_type
+        self.preferred_temp = preferred_temp
+
+    def display_info(self):
+        super().display_info()
+        print(f"Тип чешуи: {self.scale_type}")
+        print(f"Предпочитаемая температура: {self.preferred_temp}°C")
+
+    def make_sound(self):
+        print(f"{self.name} шипит.") # Переопределенный метод
+
+    def bask_in_sun(self):
+        print(f"{self.name} греется на солнце.")
+
+    def lay_eggs(self):
+        print(f"{self.name} отложила яйца.")
+
+class Fish(Animal):
+    def __init__(self, animal_id, name, species, age, habitat, diet, scale_type, depth_preference):
+        super().__init__(animal_id, name, species, age, habitat, diet)
+        self.scale_type = scale_type
+        self.depth_preference = depth_preference
+
+    def display_info(self):
+        super().display_info()
+        print(f"Тип чешуи: {self.scale_type}")
+        print(f"Предпочитаемая глубина: {self.depth_preference} метров")
+
+    def make_sound(self):
+        print(f"{self.name} булькает.") # Переопределенный метод
+
+    def swim(self):
+        print(f"{self.name} плавает.") # Специфический метод
+    
+    def move(self):
+        print(f"{self.name} плавает.") # Переопределенный метод
