@@ -1,0 +1,145 @@
+using System;
+
+public class Employee
+{
+    public string Name { get; init; }
+    public string Position { get; init; }
+    public decimal Salary { get; private set; }
+    public DateTime HireDate { get; init; }
+
+    public Employee(string name, string position, decimal salary, DateTime hireDate)
+    {
+        Name = name;
+        Position = position;
+        Salary = salary;
+        HireDate = hireDate;
+    }
+
+    public virtual decimal CalculateSalary()
+    {
+        return Salary;
+    }
+
+    public virtual void DisplayInfo()
+    {
+        Console.WriteLine($"Имя: {Name}, Должность: {Position}, Зарплата: {Salary:C}, Дата найма: {HireDate.ToShortDateString()}");
+    }
+}
+
+public class RegularEmployee : Employee
+{
+    public RegularEmployee(string name, string position, decimal salary, DateTime hireDate)
+        : base(name, position, salary, hireDate)
+    {
+    }
+
+    public override void DisplayInfo()
+    {
+        Console.Write("[Обычный сотрудник] ");
+        base.DisplayInfo();
+    }
+}
+
+public class Manager : Employee
+{
+    public int TeamSize { get; init; }
+
+    public Manager(string name, string position, decimal salary, DateTime hireDate, int teamSize)
+        : base(name, position, salary, hireDate)
+    {
+        TeamSize = teamSize;
+    }
+
+    public void ManageTeam()
+    {
+        Console.WriteLine($"{Name} управляет командой из {TeamSize} человек.");
+    }
+
+    public override decimal CalculateSalary()
+    {
+        return base.CalculateSalary() + (TeamSize * 500); 
+    }
+
+    public override void DisplayInfo()
+    {
+        Console.Write($"[Менеджер] ");
+        base.DisplayInfo();
+        Console.WriteLine($"  Размер команды: {TeamSize}");
+    }
+}
+
+public class Developer : Employee
+{
+    public string ProgrammingLanguage { get; init; }
+
+    public Developer(string name, string position, decimal salary, DateTime hireDate, string programmingLanguage)
+        : base(name, position, salary, hireDate)
+    {
+        ProgrammingLanguage = programmingLanguage;
+    }
+
+    public void WriteCode()
+    {
+        Console.WriteLine($"{Name} пишет код на {ProgrammingLanguage}.");
+    }
+
+    public override void DisplayInfo()
+    {
+        Console.Write($"[Разработчик] ");
+        base.DisplayInfo();
+        Console.WriteLine($"  Язык программирования: {ProgrammingLanguage}");
+    }
+}
+
+public class Director : Employee
+{
+    public string Department { get; init; }
+
+    public Director(string name, string position, decimal salary, DateTime hireDate, string department)
+        : base(name, position, salary, hireDate)
+    {
+        Department = department;
+    }
+
+    public void ApproveBudget()
+    {
+        Console.WriteLine($"{Name} (отдел {Department}) утверждает бюджет.");
+    }
+
+    public override void DisplayInfo()
+    {
+        Console.Write($"[Директор] ");
+        base.DisplayInfo();
+        Console.WriteLine($"  Отдел: {Department}");
+    }
+}
+
+public class Task1Program
+{
+    public static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        Console.WriteLine("--- Задание 1: Иерархия сотрудников ---");
+
+        Employee emp1 = new RegularEmployee("Иван Петров", "Бухгалтер", 50000m, new DateTime(2020, 1, 15));
+        Manager mgr1 = new Manager("Елена Смирнова", "Старший менеджер", 80000m, new DateTime(2018, 5, 10), 5);
+        Developer dev1 = new Developer("Алексей Иванов", "Разработчик", 70000m, new DateTime(2021, 3, 20), "C#");
+        Director dir1 = new Director("Ольга Кузнецова", "Директор департамента", 150000m, new DateTime(2015, 7, 1), "Продажи");
+
+        emp1.DisplayInfo();
+        Console.WriteLine($"Расчетная зарплата: {emp1.CalculateSalary():C}\n");
+
+        mgr1.DisplayInfo();
+        mgr1.ManageTeam();
+        Console.WriteLine($"Расчетная зарплата: {mgr1.CalculateSalary():C}\n");
+
+        dev1.DisplayInfo();
+        dev1.WriteCode();
+        Console.WriteLine($"Расчетная зарплата: {dev1.CalculateSalary():C}\n");
+
+        dir1.DisplayInfo();
+        dir1.ApproveBudget();
+        Console.WriteLine($"Расчетная зарплата: {dir1.CalculateSalary():C}\n");
+    }
+}
