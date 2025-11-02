@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic; 
+using System.Globalization;     
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+    
+    public abstract class LibraryItem
+    {
+        public string Title { get; init; }      
+        public string Author { get; init; }    
+        public int PublicationYear { get; init; } 
+        public string Status { get; set; }     
+
+        public LibraryItem(string title, string author, int publicationYear, string status)
+        {
+            Title = title;
+            Author = author;
+            PublicationYear = publicationYear;
+            Status = status;
+        }
+
+        public virtual void DisplayInfo()
+        {
+            Console.WriteLine($"Название: {Title}, Автор: {Author}, Год: {PublicationYear}, Статус: {Status}");
+        }
+    }
+
+    public class Book : LibraryItem
+    {
+        public int PageCount { get; init; } 
+        public string ISBN { get; init; }   
+
+        public Book(string title, string author, int publicationYear, string status, int pageCount, string isbn)
+            : base(title, author, publicationYear, status) 
+        {
+            PageCount = pageCount;
+            ISBN = isbn;
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.Write("[Книга] ");
+            base.DisplayInfo(); 
+            Console.WriteLine($"Страниц: {PageCount}, ISBN: {ISBN}");
+        }
+    }
+
+    public class Magazine : LibraryItem
+    {
+        public int IssueNumber { get; init; }    
+        public string Periodicity { get; init; } 
+        public Magazine(string title, string author, int publicationYear, string status, int issueNumber, string periodicity)
+            : base(title, author, publicationYear, status)
+        {
+            IssueNumber = issueNumber;
+            Periodicity = periodicity;
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.Write("[Журнал] ");
+            base.DisplayInfo();
+            Console.WriteLine($"Номер выпуска: {IssueNumber}, Периодичность: {Periodicity}");
+        }
+    }
+
+    public class DVD : LibraryItem
+    {
+        public TimeSpan Duration { get; init; }
+        public double Rating { get; init; }     
+
+        public DVD(string title, string author, int publicationYear, string status, TimeSpan duration, double rating)
+            : base(title, author, publicationYear, status)
+        {
+            Duration = duration;
+            Rating = rating;
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.Write("[DVD] ");
+            base.DisplayInfo();
+            Console.WriteLine($"Длительность: {Duration.TotalMinutes:F0} мин, Рейтинг: {Rating}/10");
+        }
+    }
+
+    public class AudioBook : LibraryItem
+    {
+        public TimeSpan Duration { get; init; } /
+        public string Narrator { get; init; }   
+
+        public AudioBook(string title, string author, int publicationYear, string status, TimeSpan duration, string narrator)
+            : base(title, author, publicationYear, status)
+        {
+            Duration = duration;
+            Narrator = narrator;
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.Write("[Аудиокнига] ");
+            base.DisplayInfo();
+            Console.WriteLine($"Длительность: {Duration.TotalHours:F1} ч, Диктор: {Narrator}");
+        }
+    }
