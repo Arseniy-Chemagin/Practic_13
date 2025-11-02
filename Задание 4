@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic; 
+using System.Globalization;     
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+      
+    public abstract class Course
+    
+        public string Title { get; init; }   
+        public string Description { get; init; } 
+        public string Author { get; init; }    
+        public decimal Price { get; init; }     
+
+        public Course(string title, string description, string author, decimal price)
+        {
+            Title = title;
+            Description = description;
+            Author = author;
+            Price = price;
+        }
+
+        public virtual void DisplayCourseDetails()
+        {
+            Console.WriteLine($"Название: {Title}, Автор: {Author}, Цена: {Price:C}");
+            Console.WriteLine($"Описание: {Description}");
+        }
+
+        public abstract void StartCourse();
+    }
+
+    public class VideoCourse : Course
+    {
+        public int VideoCount { get; init; }       
+        public TimeSpan TotalDuration { get; init; } 
+
+        public VideoCourse(string title, string description, string author, decimal price, int videoCount, TimeSpan totalDuration)
+            : base(title, description, author, price)
+        {
+            VideoCount = videoCount;
+            TotalDuration = totalDuration;
+        }
+
+        public override void DisplayCourseDetails()
+        {
+            Console.Write("[Видеокурс] ");
+            base.DisplayCourseDetails();
+            Console.WriteLine($"Видео: {VideoCount}, Длительность: {TotalDuration.TotalHours:F1} ч");
+        }
+
+        public override void StartCourse()
+        
+            Console.WriteLine($"Запуск видеокурса '{Title}'. Начинаем просмотр.");
+        }
+    }
+
+    public class TextCourse : Course
+    {
+        public int ChapterCount { get; init; }      
+        public int TotalTextVolume { get; init; } 
+
+        public TextCourse(string title, string description, string author, decimal price, int chapterCount, int totalTextVolume)
+            : base(title, description, author, price)
+        {
+            ChapterCount = chapterCount;
+            TotalTextVolume = totalTextVolume;
+        }
+
+        public override void DisplayCourseDetails()
+        {
+            Console.Write("[Текстовый курс] ");
+            base.DisplayCourseDetails();
+            Console.WriteLine($"Глав: {ChapterCount}, Объем: {TotalTextVolume} страниц");
+        }
+
+        public override void StartCourse()
+        {
+            Console.WriteLine($"Начинаем изучение текстового курса '{Title}'. Открываем первую главу.");
+        }
+    }
+
+    
+    public class InteractiveCourse : Course
+    {
+        public int ExerciseCount { get; init; }          
+        public bool HasAutomatedCheckingSystem { get; init; } 
+
+        public InteractiveCourse(string title, string description, string author, decimal price, int exerciseCount, bool hasAutomatedCheckingSystem)
+            : base(title, description, author, price)
+        {
+            ExerciseCount = exerciseCount;
+            HasAutomatedCheckingSystem = hasAutomatedCheckingSystem;
+        }
+
+        public override void DisplayCourseDetails()
+        {
+            Console.Write("[Интерактивный курс] ");
+            base.DisplayCourseDetails();
+            Console.WriteLine($"Упражнений: {ExerciseCount}, Проверка: {(HasAutomatedCheckingSystem ? "Автоматическая" : "Ручная")}");
+        }
+
+        public override void StartCourse()
+        {
+            Console.WriteLine($"Запускаем интерактивный курс '{Title}'. Переходим к заданиям.");
+        }
+    }
