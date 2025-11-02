@@ -1,0 +1,175 @@
+﻿using System;
+using System.Globalization;
+
+public abstract class BankAccount
+{
+    public string AccountNumber { get; init; }
+    public string OwnerName { get; init; }
+    public decimal Balance { get; protected set; }
+
+    public BankAccount(string accountNumber, string ownerName, decimal initialBalance)
+    {
+        AccountNumber = accountNumber;
+        OwnerName = ownerName;
+        Balance = initialBalance;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount <= 0) { Console.WriteLine($"Счет {AccountNumber}: Сумма пополнения должна быть положительной."); return; }
+        Balance += amount;
+        Console.WriteLine($"Счет {AccountNumber}: Пополнение на {amount:C}. Баланс: {Balance:C}");
+    }
+
+    public abstract void Withdraw(decimal amount);
+
+    public virtual void DisplayAccountInfo()
+    {
+        Console.WriteLine($"Счет: {AccountNumber}, Владелец: {OwnerName}, Баланс: {Balance:C}");
+    }
+}
+
+public class CheckingAccount : BankAccount
+{
+    public decimal OverdraftLimit { get; init; }
+
+    public CheckingAccount(string accountNumber, string ownerName, decimal initialBalance, decimal overdraftLimit)
+        : base(accountNumber, ownerName, initialBalance)
+    {
+        OverdraftLimit = overdraftLimit;
+    }
+
+    public override void Withdraw(decimal amount)
+    {
+        if (amount <= 0) { Console.WriteLine($"Счет {AccountNumber}: Сумма снятия должна быть положительной."); return; }
+        if (Balance - amount >= -OverdraftLimit)
+        {
+            Balance -= amount;
+            Console.WriteLine($"Счет {AccountNumber}: Снятие {amount:C}. Баланс: {Balance:C}");
+        }
+        else
+        {
+            Console.WriteLine($"Счет {AccountNumber}: Недостаточно средств. Доступно (с овердрафтом): {Balance + OverdraftLimit:C}.");
+        }
+    }
+
+    public override void DisplayAccountInfo()
+    {
+        Console.Write("[Текущий] ");
+        base.DisplayAccountInfo();
+        Console.WriteLine($"  Лимит овердрафта: {OverdraftLimit:C}");
+    }
+}
+
+public class SavingsAccount : BankAccount
+{
+    public decimal InterestRate { get; init; }
+
+    public SavingsAccount(string accountNumber, string ownerName, decimal initialBalance, decimal interestRate)
+        : base(accountNumber, ownerName, initialBalance)
+    {
+        InterestRate = interestRate >= 0 ? interestRate : 0;
+    }
+
+    public void AddInterest()
+    {
+        decimal interest = Balance * InterestRate;
+        Balance += interest;
+        Console.WriteLine($"Счет {AccountNumber}: Начислены проценты {interest:C}. Баланс: {Balance:C}");
+    }
+
+    public override void Withdraw(decimal amount)
+    {
+        if (amount <= 0) { Console.WriteLine($"Счет {AccountNumber}: Сумма снятия должна быть положительной."); return; }
+        if (Balance >= amount)
+        {
+            Balance -= amount;
+            Console.WriteLine($"Счет {AccountNumber}: Снятие {amount:C}. Баланс: {Balance:C}");
+        }
+        else
+        {
+            Console.WriteLine($"Счет {AccountNumber}: Недостаточно средств. Баланс: {Balance:C}.");
+        }
+    }
+
+    public override void DisplayAccountInfo()
+    {
+        Console.Write("[Сберегательный] ");
+        base.DisplayAccountInfo();
+        Console.WriteLine($"  Процентная ставка: {InterestRate:P}");
+    }
+}
+
+public class CreditAccount : BankAccount
+{
+    public decimal CreditLimit { get; init; }
+    public DateTime RepaymentTerm { get; init; }
+
+    public CreditAccount(string accountNumber, string ownerName, decimal initialBalance, decimal creditLimit, DateTime repaymentTerm)
+        : base(accountNumber, ownerName, initialBalance)
+    {
+        CreditLimit = creditLimit;
+        RepaymentTerm = repaymentTerm;
+    }
+
+    public void MakePayment(decimal amount)
+    {
+        if (amount <= 0) { Console.WriteLine($"Счет {AccountNumber}: Сумма платежа должна быть положительной."); return; }
+        Balance += amount;
+        Console.WriteLine($"Счет {AccountNumber}: Платеж {amount:C}. Баланс (долг): {Balance:C}");
+    }
+
+    public override void Withdraw(decimal amount)
+    {
+        if (amount <= 0) { Console.WriteLine($"Счет {AccountNumber}: Сумма снятия должна быть положительной."); return; }
+        if (Balance - amount >= -CreditLimit)
+        {
+            Balance -= amount;
+            Console.WriteLine($"Счет {AccountNumber}: Снятие {amount:C}. Баланс (долг): {Balance:C}");
+        }
+        else
+        {
+            Console.WriteLine($"Счет {AccountNumber}: Превышен кредитный лимит. Доступно: {CreditLimit + Balance:C}.");
+        }
+    }
+
+    public override void DisplayAccountInfo()
+    {
+        Console.Write("[Кредитный] ");
+        base.DisplayAccountInfo();
+        Console.WriteLine($"  Лимит: {CreditLimit:C}, Срок: {RepaymentTerm.ToShortDateString()}");
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
+
+        Console.WriteLine("--- Система банковских счетов ---");
+
+        CheckingAccount checkAcc = new CheckingAccount("CHK001", "Анна Иванова", 1000m, 500m);
+        SavingsAccount savAcc = new SavingsAccount("SAV002", "Петр Сидоров", 2000m, 0.02m);
+        CreditAccount credAcc = new CreditAccount("CRD003", "Ольга Петрова", 0m, 10000m, new DateTime(2024, 12, 31));
+
+        Console.WriteLine("\n--- Начальное состояние ---");
+        checkAcc.DisplayAccountInfo();
+        savAcc.DisplayAccountInfo();
+        credAcc.DisplayAccountInfo();
+
+        Console.WriteLine("\n--- Операции ---");
+        checkAcc.Deposit(200m);
+        checkAcc.Withdraw(1500m);
+        savAcc.AddInterest();
+        savAcc.Withdraw(2700m);
+        credAcc.Withdraw(3000m);
+        credAcc.MakePayment(1000m);
+
+        Console.WriteLine("\n--- Конечное состояние ---");
+        checkAcc.DisplayAccountInfo();
+        savAcc.DisplayAccountInfo();
+        credAcc.DisplayAccountInfo();
+    }
+}
